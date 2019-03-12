@@ -9,12 +9,12 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-
-  <h1><% for (key in urls) {%>
-    <%= urls[key] %>
-  <% } %>
+  <h1>
+    <tr>
+      <td><%= `ShortURL:${shortURL}`%></td>
+      <td><%=`LongURL:${longURL}`%></td> 
+    </tr>
+  
   </h1>
-
 </body>
 </html>
-
