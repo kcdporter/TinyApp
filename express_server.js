@@ -45,9 +45,10 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  let shortURL = makeShortURL(req.body);
-  console.log(shortURL);
-  res.send("WE DID IT")
+  const longURL = req.body.longURL;
+  const shortURL = makeShortURL(longURL);
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
