@@ -11,12 +11,18 @@
   <header>
     <% include ./partials/_header %>
   </header>
+  <a href= "http://localhost:8080/urls/new">Create New TinyURL</a>
   <h2>My Urls</h2>
-  <h3>
+  <table>
     <tr>
-      <td><%= `ShortURL:${shortURL}`%></td>
-      <td><%=`LongURL:${longURL}`%></td> 
+      <td><b>TinyURLS</b></td>
+      <td>LongURLS</td>
     </tr>
+    <tr>
+      <td><b><%=`${shortURL}`%></b></td>
+      <td><%=`${longURL}`%></td> 
+    </tr>
+    </table>
   
   </h3>
 </body>

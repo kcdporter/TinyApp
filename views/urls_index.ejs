@@ -14,12 +14,16 @@
 <body style="font-size:20px; padding:50px;">
   <a href= "http://localhost:8080/urls/new">Create New TinyURL</a>
   <table>
-      <% Object.keys(urls).forEach(function (shortURL) { %>
-      <tr>
-          <td> <b><%= shortURL %> </b> </td>
-          <td><%= urls[shortURL] %></td>
-      </tr>
-      <% }) %>
+    <tr>
+      <td><b>TinyURLS</b></td>
+      <td>LongURLS </td>
+    </tr>
+    <% Object.keys(urls).forEach(function (shortURL) { %>
+    <tr>
+      <td> <b><%= shortURL %> </b> </td>
+      <td><%= urls[shortURL] %></td>
+    </tr>
+    <% }) %>
   </table>
 
 </body>
