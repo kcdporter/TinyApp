@@ -7,12 +7,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+// setting global template vars
+app.use(function(req, res, next) {
+  res.locals.username = req.cookies.username;
+  next();
+});
+
 //hardCoded db//
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+
 
 //functions
 function makeShortURL() {
@@ -39,7 +47,21 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//url db route
+//Login
+app.get('/login', (req, res) => {
+  let templateVars = { 
+    urls: urlDatabase, 
+};
+  res.render("urls_index", templateVars);
+})
+
+app.post('/login', (req, res) => {
+  res.cookie('username', req.body.username);
+  res.redirect('/urls');
+
+})
+
+//Reading URL Database 
 app.get("/urls", (req, res) => {
   let templateVars = { 
     urls: urlDatabase, 
@@ -47,7 +69,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//newurls 
+//Adding new URLs
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -59,29 +81,28 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
+//Reading shortURLs
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL,
      longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
 });
 
+//Edit && Delete URLs
 app.post("/urls/:id", (req, res) => {
-  console.log('test')
-  console.log(req.params)
-  console.log(req.body.longURL)
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls/")
 })
-
-app.get("/u/:shortURL", (req, res) => {
-  res.redirect(`${urlDatabase[req.params.shortURL]}`);
-});
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 
+//Redirect to LongURL
+app.get("/u/:shortURL", (req, res) => {
+  res.redirect(`${urlDatabase[req.params.shortURL]}`);
+});
 
 
 
