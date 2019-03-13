@@ -64,7 +64,10 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id].longURL = req.body.longURL;
+  console.log('test')
+  console.log(req.params)
+  console.log(req.body.longURL)
+  urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls/")
 })
 
