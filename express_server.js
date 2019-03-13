@@ -14,13 +14,10 @@ app.use(function(req, res, next) {
 });
 
 //hardCoded db//
-
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
-
-
 
 //functions
 function makeShortURL() {
@@ -47,7 +44,7 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//Login
+//Login && Logout
 app.get('/login', (req, res) => {
   let templateVars = { 
     urls: urlDatabase, 
@@ -58,7 +55,18 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   res.cookie('username', req.body.username);
   res.redirect('/urls');
+})
 
+app.get('/logout', (req, res) => {
+  let templateVars = { 
+    urls: urlDatabase, 
+};
+  res.render("urls_index", templateVars);
+})
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('username', req.body.username);
+  res.redirect('/login');
 })
 
 //Reading URL Database 
@@ -103,8 +111,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   res.redirect(`${urlDatabase[req.params.shortURL]}`);
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
