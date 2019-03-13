@@ -11,32 +11,17 @@
   <header>
     <% include ./partials/_header %>
   </header>
-  <h2><a href= "http://localhost:8080/urls">My Urls</a></h2>
-  <table>
-    <tr>
-      <td><b>TinyURLS</b></td>
-      <td>LongURLS</td>
-    </tr>
-    <tr>
-      <td>
-        <b><%=`${shortURL}`%></b>
-      </td>
-      <td>
-        <%=`${longURL}`%>
-      </td> 
-    </tr>
-    <tr>
-      <td>
-        <form class="form-inline" action = <%=`/urls/${shortURL}`%> method="POST">
-          <div class="form-group mb-2">
-            <label for="longURL">Edit Your LongURL:</label>
-            <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
-            <button type="submit" class="btn btn-primary">Edit LongURL</button>
-          </div>
-        </form>
-      </td>
-    </tr>
-    </table>
-  </h3>
+  <h2><b><%=` ${shortURL}`%></b></h2>
+
+  <dl>  
+    <dd>
+      <form class="form-inline" action = <%=`/urls/${shortURL}`%> method="POST">
+        <label for="longURL">○ Edit Long URL:</label>
+        <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 200px; margin: 1em">
+        <button type="submit" class="btn btn-primary">Edit LongURL</button>
+      </form>
+    </dd>
+  </dl>
+
 </body>
 </html>
