@@ -35,7 +35,9 @@ app.get("/urls.json", (req, res) => {
 
 //url db route
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { 
+    urls: urlDatabase, 
+};
   res.render("urls_index", templateVars);
 });
 
@@ -55,6 +57,10 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL,
      longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  res.redirect(`${urlDatabase[req.params.shortURL]}`);
 });
 
 app.get("/hello", (req, res) => {

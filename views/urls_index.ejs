@@ -12,10 +12,15 @@
   <% include ./partials/_header %>
 </header>
 <body style="font-size:20px; padding:50px;">
-  <h1><% for (key in urls) {%>
-    <%= urls[key] %>
-  <% } %>
-  </h1>
+  <a href= "http://localhost:8080/urls/new">Create New TinyURL</a>
+  <table>
+      <% Object.keys(urls).forEach(function (shortURL) { %>
+      <tr>
+          <td> <b><%= shortURL %> </b> </td>
+          <td><%= urls[shortURL] %></td>
+      </tr>
+      <% }) %>
+  </table>
 
 </body>
 </html>
