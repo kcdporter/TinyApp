@@ -33,7 +33,7 @@ const users = {
 }
 
 //functions
-function makeShortURL() {
+function getRandom() {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   let randomstring = '';
 	for (var i = 0; i < 6; i++) {
@@ -57,7 +57,29 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//Login && Logout
+//Register && Login && Logout
+app.get('/register', (req, res) => {
+  let templateVars = { 
+    user: users, 
+};
+  res.render("registration", templateVars);
+})
+
+app.post('/register', (req, res) => {
+  const user_id = getRandom(req.body.email)
+  console.log(users);
+  const newUser = {
+    user_id: user_id,
+    userEmail: req.body.email,
+    userPassword: req.body.password
+  }
+  console.log(newUser);
+  users[user_id] = newUser;
+  console.log(users);
+  res.cookie('user', user_id);
+  res.redirect('/urls');
+});
+
 app.get('/login', (req, res) => {
   let templateVars = { 
     urls: urlDatabase, 
@@ -97,7 +119,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
-  const shortURL = makeShortURL(longURL);
+  const shortURL = getRandom(longURL);
   urlDatabase[shortURL] = longURL;
   res.redirect(`/urls/${shortURL}`);
 });
