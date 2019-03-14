@@ -3,13 +3,13 @@
   <table>
     <tr>
       <td>
-        <% if(!username) { %> 
+        <% if (!users) { %> 
           <form method = "POST" action="/login">
             <input class="form-control" type="text" name="username" placeholder="Username" style="width: 300px;">
             <button type = "submit" > Login </button> 
           </form>
         <% } else { %>
-          Logged in as, <%= username %>
+          Logged in as, <%= users.user_id%>
           <form method = "POST" action = <%="/logout"%>>
             <button type = "submit" > Logout </button>
           </form>
