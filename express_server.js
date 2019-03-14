@@ -44,16 +44,23 @@ function getRandom() {
   return randomstring;
 };
 
-function emailLookup(requestEmail) {
-  for (var user_id in users) {
-    let user = users[user_id];
-    if(user.email === requestEmail)
-    console.log(requestEmail)
-    console.log(user.email)
-      return user_id;
+const emailLookup = (requestEmail) => {
+  let database = (Object.values(users))
+  let match = [];
+  for (let user of database){
+    match.push(user.email)
   }
-  return false;
+  console.log(match)
+  for (let email of match){
+    console.log(email)
+    if (requestEmail === email){
+      return true;
+    } else {
+      continue;
+    }
+  }
 }
+
 
 //base routes
 app.get("/", (req, res) => {
@@ -77,17 +84,17 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+  const user_id = getRandom(req.body.email)
+  const newUser = {
+      user_id: user_id,
+      email: req.body.email,
+      password: req.body.password
+    };
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
-  } else if (emailLookup(req.body.email)){
+  } else if (emailLookup(newUser.email) === true){
       res.status(400).send(`Email is already registered, please <a href="/login">Login</a>`)
   } else {
-    const user_id = getRandom(req.body.email);
-    const newUser = {
-      user_id: user_id,
-      userEmail: req.body.email,
-      userPassword: req.body.password
-    };
     users[user_id] = newUser;
     res.cookie('user_id', user_id);
     res.redirect('/urls');
