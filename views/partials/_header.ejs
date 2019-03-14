@@ -4,13 +4,13 @@
     <tr>
       <td>
         <% if (!users) { %> 
-          <form method = "POST" action="/login">
-            <input class="form-control" type="text" name="username" placeholder="Username" style="width: 300px;">
-            <button type = "submit" > Login </button> 
-          </form>
+          <label for="Login">
+            <a href= "http://localhost:8080/login"> Login</a> or 
+              <a href= "http://localhost:8080/register"> Register</a>
+            </label>
         <% } else { %>
           Logged in as, <%= users.email %>
-          <form method = "POST" action = <%="/logout"%>>
+          <form-control class="inline" method = "POST" action = <%="/logout"%>>
             <button type = "submit" > Logout </button>
           </form>
         <% } %>

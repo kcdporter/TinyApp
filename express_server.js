@@ -101,25 +101,28 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  // will need to add verification
   res.render("login");
 })
 
 app.post('/login', (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase, 
-    users: users[req.cookies["user_id"]]
-  };
-  res.render("urls_index", templateVars);
+  if(!req.body.email || !req.body.password) {
+    res.status(400).send(`Please fill out both email and password fields`)
+  } else if ((emailLookup(req.body.email)) === true){
+    res.redirect('/urls');
+  } else {
+    res.status(403).send(`Email address is not registered. Please <a href="/register">Register</a>`);
+  }
+  // let templateVars = { 
+  //   urls: urlDatabase, 
+  //   users: users[req.cookies["user_id"]]
+  // };
+  // res.render("urls_index", templateVars);
 })
 
 app.post('/logout', (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase, 
-    users: users[req.cookies["user_id"]]
-  };
-  res.clearCookie('username', req.body.username);
-  res.render("urls_index", templateVars);
+  
+  res.clearCookie('user_id', req.body.username);
+  res.redirect("/urls")
 })
 
 //Reading URL Database 
