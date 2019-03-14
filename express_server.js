@@ -43,7 +43,6 @@ function getRandom() {
   }
   return randomstring;
 };
-
 const emailLookup = (requestEmail) => {
   let database = (Object.values(users))
   let match = [];
@@ -58,7 +57,20 @@ const emailLookup = (requestEmail) => {
     }
   }
 }
-
+const passwordLookup = (requestPassword) => {
+  let database = (Object.values(users))
+  let match = [];
+  for (let user of database){
+    match.push(user.password)
+  }
+  for (let password of match){
+    if (requestPassword === password){
+      return true;
+    } else {
+      continue;
+    }
+  }
+}
 
 //base routes
 app.get("/", (req, res) => {
@@ -105,18 +117,18 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+  isEmailMatch = (emailLookup(req.body.email));
+  isPasswordMatch = (passwordLookup(req.body.password));
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
-  } else if ((emailLookup(req.body.email)) === true){
+  } else if (isEmailMatch && isPasswordMatch) {
     res.redirect('/urls');
-  } else {
+  } else {  
+    if(!isEmailMatch) {
     res.status(403).send(`Email address is not registered. Please <a href="/register">Register</a>`);
+    } 
+    res.status(403).send(`Password is not correct. Please <a href="/login">Try again</a>`);
   }
-  // let templateVars = { 
-  //   urls: urlDatabase, 
-  //   users: users[req.cookies["user_id"]]
-  // };
-  // res.render("urls_index", templateVars);
 })
 
 app.post('/logout', (req, res) => {

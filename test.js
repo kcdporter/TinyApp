@@ -11,19 +11,20 @@ const users = {
   }
 }
 
-const emailLookup = (requestEmail) => {
+const passwordLookup = (requestPassword) => {
   let database = (Object.values(users))
   let match = [];
   for (let user of database){
-    match.push(user.email)
+    match.push(user.password)
   }
-  for (let email of match){
-    if (requestEmail === email){
-      console.log("Match");
+  for (let password of match){
+    if (requestPassword === password){
+      console.log("true")
+      return true;
     } else {
+      console.log("false")
       continue;
     }
   }
 }
-
-emailLookup('user2@example.com')
+passwordLookup('dishwasher-funk');
