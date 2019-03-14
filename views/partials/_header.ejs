@@ -9,7 +9,7 @@
             <button type = "submit" > Login </button> 
           </form>
         <% } else { %>
-          Logged in as, <%= users.user_id%>
+          Logged in as, <%= users.email %>
           <form method = "POST" action = <%="/logout"%>>
             <button type = "submit" > Logout </button>
           </form>

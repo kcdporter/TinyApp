@@ -50,9 +50,7 @@ const emailLookup = (requestEmail) => {
   for (let user of database){
     match.push(user.email)
   }
-  console.log(match)
   for (let email of match){
-    console.log(email)
     if (requestEmail === email){
       return true;
     } else {
@@ -90,6 +88,7 @@ app.post('/register', (req, res) => {
       email: req.body.email,
       password: req.body.password
     };
+  console.log(newUser)
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
   } else if (emailLookup(newUser.email) === true){
@@ -102,11 +101,8 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase, 
-    users: users[req.cookies["user_id"]]
-  };
-  res.render("urls_index", templateVars);
+  // will need to add verification
+  res.render("login");
 })
 
 app.post('/login', (req, res) => {
@@ -137,7 +133,11 @@ app.get("/urls", (req, res) => {
 
 //Adding new URLs
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVars = { 
+  urls: urlDatabase, 
+  users: users[req.cookies["user_id"]]
+};
+  res.render("urls_new", templateVars);
 });
 
 app.post("/urls", (req, res) => {
@@ -149,8 +149,11 @@ app.post("/urls", (req, res) => {
 
 //Reading shortURLs
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL,
-     longURL: urlDatabase[req.params.shortURL]};
+  let templateVars = { 
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    users: users[req.cookies["user_id"]]
+    };
   res.render("urls_show", templateVars);
 });
 
