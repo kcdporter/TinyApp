@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: 'session',
-  keys: ["key1", "key2"],
+  keys: ['key1', 'key2'],
 }))
 const bcrypt = require('bcrypt');
 
@@ -71,31 +71,31 @@ function urlsForUser(requestUser) {
 //Register && Login && Logout
 app.get('/register', (req, res) => {
   let templateVars = { 
-    users: users[req.session["user_id"]]
+    users: users[req.session['user_id']]
   };
-  res.render("registration", templateVars);
+  res.render('registration', templateVars);
 })
 
 app.post('/register', (req, res) => {
   const user_id = getRandomValue(req.body.email)
-  const newUser = {
+  const newRegisteredUser = {
       id: user_id,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10)
     };
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
-  } else if (authenticateUser(newUser.email) === true){
-      res.status(400).send(`Email is already registered, please <a href="/login">Login</a>`)
+  } else if (authenticateUser(newRegisteredUser.email) === true){
+      res.status(400).send(`Email is already registered, please <a href='/login'>Login</a>`)
   } else {
-    users[user_id] = newUser;
+    users[user_id] = newRegisteredUser;
     req.session.user_id = user_id;
     res.redirect('/urls');
   }
 });
 
 app.get('/login', (req, res) => {
-  res.render("login");
+  res.render('login');
 })
 
 app.post('/login', (req, res) => {
@@ -112,35 +112,35 @@ app.post('/login', (req, res) => {
 
 app.post('/logout', (req, res) => {
   res.session = null;
-  res.redirect("/login")
+  res.redirect('/login')
 })
 
 //Reading URL Database 
-app.get("/urls", (req, res) => {
+app.get('/urls', (req, res) => {
   if (!req.session.user_id){
-    res.redirect("/login");
+    res.redirect('/login');
   }
   let urlDb = urlsForUser(req.session.user_id);
   let templateVars = {
     urls: urlDb,
     users: users[req.session.user_id]
 };
-  res.render("urls_index", templateVars);
+  res.render('urls_index', templateVars);
 });
 
 //Adding new URLs
-app.get("/urls/new", (req, res) => {
+app.get('/urls/new', (req, res) => {
   if(!req.session.user_id || !users[req.session.user_id]){
-    res.redirect("/login")
+    res.redirect('/login')
   } else {
   let templateVars = { 
     users: users[req.session.user_id],
   }
-  res.render("urls_new", templateVars);
+  res.render('urls_new', templateVars);
   };
 });
 
-app.post("/urls", (req, res) => {
+app.post('/urls', (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = getRandomValue(longURL);
   urlDatabase[shortURL] = { longURL, user_id: (req.session.user_id), shortURL};
@@ -150,11 +150,11 @@ app.post("/urls", (req, res) => {
     users: users[req.session.user_id]
 };
   // res.redirect(`/urls/${shortURL}`);
-  res.render("urls_index", templateVars);
+  res.render('urls_index', templateVars);
 });
 
 //Reading shortURLs
-app.get("/urls/:shortURL", (req, res) => {
+app.get('/urls/:shortURL', (req, res) => {
   if(!req.session.user_id|| !urlDatabase[req.params.shortURL] || urlDatabase[req.params.shortURL].user_id !== req.session.user_id){
     res.status(403).send(`This ShortURL belongs to a registered user. Please login to access. Please <a href="/login">login</a>`);
   }
@@ -163,32 +163,30 @@ app.get("/urls/:shortURL", (req, res) => {
     longURL: urlDatabase[req.params.shortURL],
     users: users[req.session.user_id]
     };
-  res.render("urls_show", templateVars);
+  res.render('urls_show', templateVars);
 });
 
 //Edit && Delete URLs
-app.post("/urls/:shortURL", (req, res) => {
+app.post('/urls/:shortURL', (req, res) => {
   if(!req.session.user_id|| !urlDatabase[req.params.shortURL] || urlDatabase[req.params.shortURL].user_id !== req.session.user_id){
     res.status(403).send(`This ShortURL belongs to a registered user. Please login to access. Please <a href="/login">login</a>`);
   }
   let shortURL = req.params.shortURL;
   let longURL = req.body.longURL;
   urlDatabase[shortURL] = { longURL, user_id: (req.session.user_id), shortURL};
-  res.redirect("/urls/");
+  res.redirect('/urls/');
 })
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.post('/urls/:shortURL/delete', (req, res) => {
   if(!req.session.user_id || urlDatabase[req.params.shortURL].user_id !== req.session.user_id){
     res.status(403).send(`This ShortURL belongs to a registered user. Please login to access. Please <a href="/login">login</a>`);
   } 
   delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  res.redirect('/urls');
 });
 
 //Redirect to LongURL
-app.get("/u/:shortURL", (req, res) => {
-  console.log("Req PARAMS", req.params)
-  console.log("HOPE", urlDatabase[req.params.shortURL])
+app.get('/u/:shortURL', (req, res) => {
   res.redirect(`${urlDatabase[req.params.shortURL].longURL}`);
 });
 
