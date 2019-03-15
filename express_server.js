@@ -13,8 +13,15 @@ const bcrypt = require('bcrypt');
 
 //HardCoded Databases
 const urlDatabase = {
-  b2xVn2: {longURL:"http://www.lighthouselabs.ca", user_id:"userRandomID", shortURL:'b2xVn2' },
-  Bkjfw0: {longURL:"http://www.google.com", user_id:"user2RandomID", shortURL:'Bkjfw0'},
+  b2xVn2: {
+    longURL:"http://www.lighthouselabs.ca", 
+    user_id:"userRandomID", 
+    shortURL:'b2xVn2' 
+  },
+  Bkjfw0: {
+    longURL:"http://www.google.com", 
+    user_id:"user2RandomID", 
+    shortURL:'Bkjfw0'},
 };
 
 const users = { 
@@ -42,10 +49,9 @@ function getRandomValue() {
   return randomstring;
 };
 
-function authenticateUser(email, password){
-  for(var key in users){
-    if((users[key].email === email ) && bcrypt.compareSync(password, users[key].password)){
-      console.log(users[key])
+function authenticateUser(requestEmail, requestPassword){
+  for(let key in users){
+    if((users[key].email === requestEmail ) && bcrypt.compareSync(requestPassword, users[key].password)){
       return users[key];
     }
   }
@@ -53,7 +59,7 @@ function authenticateUser(email, password){
 
 function urlsForUser(requestUser) {
   let urlList = [];
-  for (var key in urlDatabase){
+  for (let key in urlDatabase){
     let urlId = urlDatabase[key];
     if (requestUser === urlId.user_id){
       urlList.push(urlDatabase[key]);
