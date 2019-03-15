@@ -18,17 +18,17 @@
       <td><b>TinyURLS</b></td>
       <td>LongURLS </td>
     </tr>
-    <% Object.keys(urls).forEach(function (shortURL) { %>
+    <% urls.forEach(function (shortURL) { %>
     <tr>
-      <td> <b><%= shortURL %> </b> </td>
-      <td><%= urls[shortURL] %></td>
+      <td> <b><%= shortURL.shortURL %> </b> </td>
+      <td><%= shortURL.longURL %></td>
       <td>
-        <form method = "POST" style = "margin-left: 10px;" action = <%=`/urls/${shortURL}/delete`%>>
+        <form method = "POST" style = "margin-left: 10px;" action = <%=`/urls/${shortURL.shortURL}/delete`%>>
         <button type = "submit" > Delete </button>
         </form>
       </td>
       <td>
-        <form method = "GET" style = "margin-left: .5px;" action = <%=`/urls/${shortURL}`%>>
+        <form method = "GET" style = "margin-left: .5px;" action = <%=`/urls/${shortURL.shortURL}`%>>
           <button type = "submit" > Edit </button>
         </form>
       </td>
