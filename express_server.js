@@ -37,43 +37,22 @@ function getRandom() {
   }
   return randomstring;
 };
-const emailLookup = (requestEmail) => {
-  let database = (Object.values(users))
-  let match = [];
-  for (let user of database){
-    match.push(user.email)
-  }
-  for (let email of match){
-    if (requestEmail === email){
-      return true;
-    } else {
-      continue;
-    }
-  }
-}
-const passwordLookup = (requestPassword) => {
-  let database = (Object.values(users))
-  let match = [];
-  for (let user of database){
-    match.push(user.password)
-  }
-  for (let password of match){
-    if (requestPassword === password){
-      return true;
-    } else {
-      continue;
+
+function authenticateUser(email, password){
+  for(var key in users){
+    if(users[key].email === email && users[key].password===password){
+      console.log(users[key])
+      return users[key];
     }
   }
 }
 
 function urlsForUser(requestUser) {
   let urlList = [];
-  // urlList = {}
   for (var key in urlDatabase){
     let urlId = urlDatabase[key];
     if (requestUser === urlId.user_id){
       urlList.push(urlDatabase[key]);
-      // urlList = [{},{}] 
     }
   }
   return urlList;
@@ -104,13 +83,13 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
   const user_id = getRandom(req.body.email)
   const newUser = {
-      user_id: user_id,
+      id: user_id,
       email: req.body.email,
       password: req.body.password
     };
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
-  } else if (emailLookup(newUser.email) === true){
+  } else if (authenticateUser(newUser.email) === true){
       res.status(400).send(`Email is already registered, please <a href="/login">Login</a>`)
   } else {
     users[user_id] = newUser;
@@ -124,17 +103,18 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-  isEmailMatch = (emailLookup(req.body.email));
-  isPasswordMatch = (passwordLookup(req.body.password));
+  let user = authenticateUser(req.body.email, req.body.password);
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
-  } else if (isEmailMatch && isPasswordMatch) {
-    res.cookie('user_id', user_id )
+  } else if (user) {
+    res.cookie('user_id', user.id)
     res.redirect('/urls');
-  } else {  
-    if(!isEmailMatch) {
-    res.status(403).send(`Email address is not registered. Please <a href="/register">Register</a>`);
-    } 
+  } else {
+    if(user) {
+console.log("user with email and password", user)
+        res.status(403).send(`Email address is not registered. Please <a href="/register">Register</a>`);
+      }
+    console.log("Pass not correct") 
     res.status(403).send(`Password is not correct. Please <a href="/login">Try again</a>`);
   }
 })
@@ -159,7 +139,7 @@ app.get("/urls", (req, res) => {
 
 //Adding new URLs
 app.get("/urls/new", (req, res) => {
-  if(!req.cookies.user_id){
+  if(!req.cookies.user_id || !users[req.cookies.user_id]){
     res.redirect("/login")
   } else {
   let templateVars = { 
@@ -184,7 +164,6 @@ app.post("/urls", (req, res) => {
 
 //Reading shortURLs
 app.get("/urls/:shortURL", (req, res) => {
-  console.log("req params", req.params)
   let templateVars = { 
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
@@ -195,15 +174,19 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //Edit && Delete URLs
 app.post("/urls/:id", (req, res) => {
+  if(!req.cookies.user_id || urlDatabase[req.params.shortURL].user_id !== req.cookies.user_id){
+    res.status(403).send(`This ShortURL belongs to a registered user. Please login to access. Please <a href="/login">login</a>`);
+  }
   let shortURL = req.params.id;
   let longURL = req.body.longURL;
-  console.log("edit long url", req.params.id);
-  console.log("DB",)
   urlDatabase[shortURL] = { longURL, user_id: (req.cookies.user_id), shortURL};
-  res.redirect("/urls/")
+  res.redirect("/urls/");
 })
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  if(!req.cookies.user_id || urlDatabase[req.params.shortURL].user_id !== req.cookies.user_id){
+    res.status(403).send(`This ShortURL belongs to a registered user. Please login to access. Please <a href="/login">login</a>`);
+  } 
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
