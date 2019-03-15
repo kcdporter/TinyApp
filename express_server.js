@@ -7,16 +7,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-// setting global template vars
-app.use(function(req, res, next) {
-  res.locals.username = req.cookies.username;
-  next();
-});
-
 //hardCoded db//
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b2xVn2: {longURL:"http://www.lighthouselabs.ca", user_id:"userRandomID"},
+  Bkjfw0: {longURL:"http://www.google.com", user_id:"user2RandomID"},
 };
 
 const users = { 
@@ -71,6 +65,26 @@ const passwordLookup = (requestPassword) => {
     }
   }
 }
+
+function urlsForUser(requestUser) {
+  let urlList = [];
+  for (var key in urlDatabase){
+    let urlId = urlDatabase[key];
+    if (requestUser === urlId.user_id){
+      urlList.push(key);  
+    }
+  }
+  console.log(urlList)
+  return urlList;
+}
+
+const doesUserExist = (currentUser) => {
+  for (let user in users) {
+    if (user === currentUser) {
+      return true;
+    }
+  } return false;
+};
 
 //base routes
 app.get("/", (req, res) => {
@@ -132,15 +146,18 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-  
-  res.clearCookie('user_id', req.body.username);
-  res.redirect("/urls")
+  res.clearCookie('user_id');
+  res.redirect("/login")
 })
 
 //Reading URL Database 
 app.get("/urls", (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase, 
+  if (!req.cookies.user_id){
+    res.redirect("/login");
+  }
+  let urlDb = urlsForUser(req.cookies.user_id)
+  let templateVars = {
+    urls: urlDb,
     users: users[req.cookies["user_id"]]
 };
   res.render("urls_index", templateVars);
@@ -148,11 +165,14 @@ app.get("/urls", (req, res) => {
 
 //Adding new URLs
 app.get("/urls/new", (req, res) => {
+  if(!req.cookies.user_id){
+    res.redirect("/login")
+  } else {
   let templateVars = { 
-  urls: urlDatabase, 
-  users: users[req.cookies["user_id"]]
-};
+    users: users[req.cookies["user_id"]]
+  }
   res.render("urls_new", templateVars);
+  };
 });
 
 app.post("/urls", (req, res) => {

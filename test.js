@@ -1,30 +1,20 @@
-const users = { 
-  "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
-  }
-}
+const urlDatabase = {
+  b2xVn2: {longURL:"http://www.lighthouselabs.ca", user_id:"userRandomID"},
+  Bkjfw0: {longURL:"http://www.google.com", user_id:"user2RandomID"},
+  jhrewa: {longURL:"http://www.lighthouselabs.ca", user_id:"userRandomID"},
+  FAWkfa: {longURL:"http://www.google.com", user_id:"user2RandomID"},
 
-const passwordLookup = (requestPassword) => {
-  let database = (Object.values(users))
-  let match = [];
-  for (let user of database){
-    match.push(user.password)
-  }
-  for (let password of match){
-    if (requestPassword === password){
-      console.log("true")
-      return true;
-    } else {
-      console.log("false")
-      continue;
+};
+
+function urlsForUser(requestUser) {
+  let urlList = [];
+  for (var key in urlDatabase){
+    let urlId = urlDatabase[key];
+    if (requestUser === urlId.user_id){
+      urlList.push(key);  
     }
   }
+  console.log(urlList)
+  return urlList;
 }
-passwordLookup('dishwasher-funk');
+urlsForUser('user2RandomID');

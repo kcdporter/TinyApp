@@ -23,12 +23,12 @@
       <td> <b><%= shortURL %> </b> </td>
       <td><%= urls[shortURL] %></td>
       <td>
-        <form method = "POST" action = <%=`/urls/${shortURL}/delete`%>>
+        <form method = "POST" style = "margin-left: 10px;" action = <%=`/urls/${shortURL}/delete`%>>
         <button type = "submit" > Delete </button>
         </form>
       </td>
       <td>
-        <form method = "GET" action = <%=`/urls/${shortURL}`%>>
+        <form method = "GET" style = "margin-left: .5px;" action = <%=`/urls/${shortURL}`%>>
           <button type = "submit" > Edit </button>
         </form>
       </td>

@@ -9,9 +9,11 @@
               <a href= "http://localhost:8080/register"> Register</a>
             </label>
         <% } else { %>
-          Logged in as, <%= users.email %>
-          <form-control class="inline" method = "POST" action = <%="/logout"%>>
-            <button type = "submit" > Logout </button>
+          <form class="form-inline" method ="POST" action ="/logout">
+            <div class="form-group mb-2">
+                Logged in as,<b><%= users.email %></b>
+            <button type = "submit" style = "margin-left: 10px;"> Logout </button>
+          </div>
           </form>
         <% } %>
       </td>
