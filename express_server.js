@@ -7,8 +7,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const bcrypt = require('bcrypt');
-const password = "purple-monkey-dinosaur";
-const hashedPassword = bcrypt.hashSync(password, 10);
 
 //hardCoded db//
 const urlDatabase = {
@@ -88,7 +86,8 @@ app.post('/register', (req, res) => {
   const newUser = {
       id: user_id,
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      hashedPassword: bcrypt.hashSync(req.body.password, 10)
     };
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
@@ -113,13 +112,8 @@ app.post('/login', (req, res) => {
     res.cookie('user_id', user.id)
     res.redirect('/urls');
   } else {
-    if(user) {
-console.log("user with email and password", user)
-        res.status(403).send(`Email address is not registered. Please <a href="/register">Register</a>`);
-      }
-    console.log("Pass not correct") 
-    res.status(403).send(`Password is not correct. Please <a href="/login">Try again</a>`);
-  }
+    res.status(403).send(`Email or password not recognized. If you haven't already, register <a href="/register"> here </a>, or try a different <a href="/login"> password. </a>`);
+    }
 })
 
 app.post('/logout', (req, res) => {
