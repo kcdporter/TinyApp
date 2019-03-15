@@ -41,7 +41,7 @@ function getRandom() {
 
 function authenticateUser(email, password){
   for(var key in users){
-    if(users[key].email === email && users[key].password===password){
+    if((users[key].email === email ) && bcrypt.compareSync(password, users[key].password)){
       console.log(users[key])
       return users[key];
     }
@@ -86,8 +86,7 @@ app.post('/register', (req, res) => {
   const newUser = {
       id: user_id,
       email: req.body.email,
-      password: req.body.password,
-      hashedPassword: bcrypt.hashSync(req.body.password, 10)
+      password: bcrypt.hashSync(req.body.password, 10)
     };
   if(!req.body.email || !req.body.password) {
     res.status(400).send(`Please fill out both email and password fields`)
