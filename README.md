@@ -3,12 +3,12 @@
 TinyApp is a full stack web application build with Node and Express that allows users to shorten long URLs (similar to bit.ly).
 
 ##Dependancies
-⋅⋅* Node.js
-⋅⋅* Express
-⋅⋅* EJS
-⋅⋅* bcrypt
-⋅⋅* body-parser
-⋅⋅* cookie-session
+  * Node.js
+  * Express
+  * EJS
+  * bcrypt
+  * body-parser
+  * cookie-session
 
 ## Getting Started
 1. Install all dependancies using the `npm install` command.
