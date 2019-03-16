@@ -4,17 +4,25 @@
     <tr>
       <td>
         <% if (!users) { %> 
-          <label for="Login">
-            <a href= "http://localhost:8080/login"> Login</a> or 
-              <a href= "http://localhost:8080/register"> Register</a>
-            </label>
+        <label for="Login">
+        <a href= "http://localhost:8080/login"> 
+          Login
+        </a> 
+        or 
+        <a href= "http://localhost:8080/register"> 
+          Register
+        </a>
+        </label>
         <% } else { %>
-          <form class="form-inline" method ="POST" action ="/logout">
-            <div class="form-group mb-2">
-                Logged in as,<b><%= users.email %></b>
-            <button type = "submit" style = "margin-left: 10px;"> Logout </button>
+        <form class="form-inline" method ="POST" action ="/logout">
+          <div class="form-group mb-2">
+            Logged in as,
+            <b><%= users.email %></b>
+            <button type = "submit" style = "margin-left: 10px;"> 
+            Logout 
+            </button>
           </div>
-          </form>
+        </form>
         <% } %>
       </td>
     </tr>

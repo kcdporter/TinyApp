@@ -12,30 +12,31 @@
   <% include ./partials/_header %>
 </header>
 <body style="font-size:20px; padding:50px;">
-  <a href= "http://localhost:8080/urls/new">Create New TinyURL</a>
+  <a href= "http://localhost:8080/urls/new">
+    Create New TinyURL
+  </a>
   <table>
     <tr>
       <td><b>TinyURLS</b></td>
       <td>LongURLS </td>
     </tr>
     <% urls.forEach(function (shortURL) { %>
-    <tr>
-      <td> <b><%= shortURL.shortURL %> </b> </td>
-      <td><%= shortURL.longURL %></td>
-      <td>
-        <form method = "POST" style = "margin-left: 10px;" action = <%=`/urls/${shortURL.shortURL}/delete`%>>
-        <button type = "submit" > Delete </button>
-        </form>
-      </td>
-      <td>
-        <form method = "GET" style = "margin-left: .5px;" action = <%=`/urls/${shortURL.shortURL}`%>>
-          <button type = "submit" > Edit </button>
-        </form>
-      </td>
-    </tr>
+      <tr>
+        <td><b><%= shortURL.shortURL %></b></td>
+        <td><%= shortURL.longURL %></td>
+        <td>
+          <form method = "POST" style = "margin-left: 10px;" action = <%=`/urls/${shortURL.shortURL}/delete`%>>
+          <button type = "submit" > Delete </button>
+          </form>
+        </td>
+        <td>
+          <form method = "GET" style = "margin-left: .5px;" action = <%=`/urls/${shortURL.shortURL}`%>>
+            <button type = "submit" > Edit </button>
+          </form>
+        </td>
+      </tr>
     <% }) %>
   </table>
-
 </body>
 </html>
 
